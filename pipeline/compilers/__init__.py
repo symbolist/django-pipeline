@@ -39,6 +39,9 @@ class Compiler(object):
                         if input_path in settings.PIPELINE_ALWAYS_RECOMPILE:
                             force = True
 
+                        print 'Compiling %s to %s, outdated=%s, force=%s' % (
+                            infile, outfile, outdated, force)
+
                         compiler.compile_file(infile, outfile, outdated=outdated, force=force)
                     except CompilerError:
                         if not self.storage.exists(output_path) or not settings.PIPELINE:
