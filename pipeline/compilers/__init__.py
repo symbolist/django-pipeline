@@ -1,5 +1,6 @@
 import os
 import subprocess
+import logging
 
 try:
     from staticfiles import finders
@@ -10,6 +11,8 @@ from pipeline.conf import settings
 from pipeline.storage import default_storage
 from pipeline.utils import to_class
 
+
+LOG = logging.getLogger(__name__)
 
 class Compiler(object):
     def __init__(self, storage=default_storage, verbose=False):
@@ -39,7 +42,7 @@ class Compiler(object):
                         if input_path in settings.PIPELINE_ALWAYS_RECOMPILE:
                             force = True
 
-                        print 'Compiling %s to %s, outdated=%s, force=%s' % (
+                        LOG.info('Compiling %s to %s, outdated=%s, force=%s',
                             infile, outfile, outdated, force)
 
                         compiler.compile_file(infile, outfile, outdated=outdated, force=force)
