@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 
 PIPELINE = getattr(settings, 'PIPELINE', not settings.DEBUG)
@@ -5,14 +7,12 @@ PIPELINE_ROOT = getattr(settings, 'PIPELINE_ROOT', settings.STATIC_ROOT)
 PIPELINE_URL = getattr(settings, 'PIPELINE_URL', settings.STATIC_URL)
 
 PIPELINE_STORAGE = getattr(settings, 'PIPELINE_STORAGE',
-    'pipeline.storage.PipelineFinderStorage')
+                           'pipeline.storage.PipelineFinderStorage')
 
 PIPELINE_CSS_COMPRESSOR = getattr(settings, 'PIPELINE_CSS_COMPRESSOR',
-    'pipeline.compressors.yui.YUICompressor'
-)
+                                  'pipeline.compressors.yuglify.YuglifyCompressor')
 PIPELINE_JS_COMPRESSOR = getattr(settings, 'PIPELINE_JS_COMPRESSOR',
-    'pipeline.compressors.yui.YUICompressor'
-)
+                                 'pipeline.compressors.yuglify.YuglifyCompressor')
 PIPELINE_COMPILERS = getattr(settings, 'PIPELINE_COMPILERS', [])
 
 PIPELINE_CSS = getattr(settings, 'PIPELINE_CSS', {})
@@ -27,6 +27,10 @@ PIPELINE_DISABLE_WRAPPER = getattr(settings, 'PIPELINE_DISABLE_WRAPPER', False)
 PIPELINE_CSSTIDY_BINARY = getattr(settings, 'PIPELINE_CSSTIDY_BINARY', '/usr/bin/env csstidy')
 PIPELINE_CSSTIDY_ARGUMENTS = getattr(settings, 'PIPELINE_CSSTIDY_ARGUMENTS', '--template=highest')
 
+PIPELINE_YUGLIFY_BINARY = getattr(settings, 'PIPELINE_YUGLIFY_BINARY', '/usr/bin/env yuglify')
+PIPELINE_YUGLIFY_CSS_ARGUMENTS = getattr(settings, 'PIPELINE_YUGLIFY_CSS_ARGUMENTS', '--terminal')
+PIPELINE_YUGLIFY_JS_ARGUMENTS = getattr(settings, 'PIPELINE_YUGLIFY_JS_ARGUMENTS', '--terminal')
+
 PIPELINE_YUI_BINARY = getattr(settings, 'PIPELINE_YUI_BINARY', '/usr/bin/env yuicompressor')
 PIPELINE_YUI_CSS_ARGUMENTS = getattr(settings, 'PIPELINE_YUI_CSS_ARGUMENTS', '')
 PIPELINE_YUI_JS_ARGUMENTS = getattr(settings, 'PIPELINE_YUI_JS_ARGUMENTS', '')
@@ -36,6 +40,9 @@ PIPELINE_CLOSURE_ARGUMENTS = getattr(settings, 'PIPELINE_CLOSURE_ARGUMENTS', '')
 
 PIPELINE_UGLIFYJS_BINARY = getattr(settings, 'PIPELINE_UGLIFYJS_BINARY', '/usr/bin/env uglifyjs')
 PIPELINE_UGLIFYJS_ARGUMENTS = getattr(settings, 'PIPELINE_UGLIFYJS_ARGUMENTS', '')
+
+PIPELINE_CSSMIN_BINARY = getattr(settings, 'PIPELINE_CSSMIN_BINARY', '/usr/bin/env cssmin')
+PIPELINE_CSSMIN_ARGUMENTS = getattr(settings, 'PIPELINE_CSSMIN_ARGUMENTS', '')
 
 PIPELINE_COFFEE_SCRIPT_BINARY = getattr(settings, 'PIPELINE_COFFEE_SCRIPT_BINARY', '/usr/bin/env coffee')
 PIPELINE_COFFEE_SCRIPT_ARGUMENTS = getattr(settings, 'PIPELINE_COFFEE_SCRIPT_ARGUMENTS', '')

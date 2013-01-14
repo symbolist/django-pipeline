@@ -1,11 +1,13 @@
+from __future__ import unicode_literals
+
 import os
 import subprocess
 import logging
 
-try:
-    from staticfiles import finders
-except ImportError:
-    from django.contrib.staticfiles import finders # noqa
+from django.contrib.staticfiles import finders
+
+from django.core.files.base import ContentFile
+from django.utils.encoding import smart_str
 
 from pipeline.conf import settings
 from pipeline.storage import default_storage
@@ -26,7 +28,7 @@ class Compiler(object):
     def compile(self, paths, force=False):
         for index, input_path in enumerate(paths):
             for compiler in self.compilers:
-                compiler = compiler(self.verbose)
+                compiler = compiler(verbose=self.verbose, storage=self.storage)
                 if compiler.match_file(input_path):
                     output_path = self.output_path(input_path, compiler.output_extension)
                     paths[index] = output_path
@@ -63,14 +65,24 @@ class Compiler(object):
 
 
 class CompilerBase(object):
-    def __init__(self, verbose):
+    def __init__(self, verbose, storage):
         self.verbose = verbose
+        self.storage = storage
 
     def match_file(self, filename):
         raise NotImplementedError
 
     def compile_file(self, infile, outfile, outdated=False, force=False):
         raise NotImplementedError
+
+    def save_file(self, path, content):
+        return self.storage.save(path, ContentFile(smart_str(content)))
+
+    def read_file(self, path):
+        file = self.storage.open(path, 'rb')
+        content = file.read()
+        file.close()
+        return content
 
 
 class CompilerError(Exception):
@@ -80,8 +92,8 @@ class CompilerError(Exception):
 class SubProcessCompiler(CompilerBase):
     def execute_command(self, command, content=None, cwd=None):
         pipe = subprocess.Popen(command, shell=True, cwd=cwd,
-            stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+                                stdout=subprocess.PIPE, stdin=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
 
         if content:
             pipe.stdin.write(content)
@@ -99,6 +111,6 @@ class SubProcessCompiler(CompilerBase):
             raise CompilerError(error)
 
         if self.verbose:
-            print error
+            print(error)
 
         return compressed_content

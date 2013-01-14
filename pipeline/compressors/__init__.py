@@ -1,20 +1,18 @@
+from __future__ import unicode_literals
+
 import base64
 import os
+import posixpath
 import re
 import subprocess
 
 from itertools import takewhile
 
-from django.utils.encoding import smart_str, force_unicode
-
-try:
-    from staticfiles import finders
-except ImportError:
-    from django.contrib.staticfiles import finders # noqa
+from django.utils.encoding import smart_bytes, force_text
 
 from pipeline.conf import settings
-from pipeline.utils import to_class, relpath
 from pipeline.storage import default_storage
+from pipeline.utils import to_class, relpath
 
 URL_DETECTOR = r'url\([\'"]?([^\s)]+\.[a-z]+[\?\#\d\w]*)[\'"]?\)'
 URL_REPLACER = r'url\(__EMBED__(.+?)(\?\d+)?\)'
@@ -87,9 +85,9 @@ class Compressor(object):
         namespace = settings.PIPELINE_TEMPLATE_NAMESPACE
         base_path = self.base_path(paths)
         for path in paths:
-            contents = self.read_file(path)
-            contents = re.sub(r"\r?\n", "\\\\n", contents)
-            contents = re.sub(r"'", "\\'", contents)
+            contents = self.read_text(path)
+            contents = re.sub("\r?\n", "\\\\n", contents)
+            contents = re.sub("'", "\\'", contents)
             name = self.template_name(path, base_path)
             compiled += "%s['%s'] = %s('%s');\n" % (
                 namespace,
@@ -130,24 +128,24 @@ class Compressor(object):
                 if asset_path.startswith("http") or asset_path.startswith("//"):
                     return "url(%s)" % asset_path
                 asset_url = self.construct_asset_path(asset_path, path,
-                    output_filename, variant)
+                                                      output_filename, variant)
                 return "url(%s)" % asset_url
-            content = self.read_file(path)
+            content = self.read_text(path)
             # content needs to be unicode to avoid explosions with non-ascii chars
-            content = re.sub(URL_DETECTOR, reconstruct, force_unicode(content))
+            content = re.sub(URL_DETECTOR, reconstruct, content)
             stylesheets.append(content)
         return '\n'.join(stylesheets)
 
     def concatenate(self, paths):
         """Concatenate together a list of files"""
-        return '\n'.join([self.read_file(path) for path in paths])
+        return "\n".join([self.read_text(path) for path in paths])
 
     def construct_asset_path(self, asset_path, css_path, output_filename, variant=None):
         """Return a rewritten asset URL for a stylesheet"""
-        public_path = self.absolute_path(asset_path, os.path.dirname(css_path))
+        public_path = self.absolute_path(asset_path, os.path.dirname(css_path).replace('\\', '/'))
         if self.embeddable(public_path, variant):
             return "__EMBED__%s" % public_path
-        if not os.path.isabs(asset_path):
+        if not posixpath.isabs(asset_path):
             asset_path = self.relative_path(public_path, output_filename)
         return asset_path
 
@@ -155,10 +153,9 @@ class Compressor(object):
         """Is the asset embeddable ?"""
         name, ext = os.path.splitext(path)
         font = ext in FONT_EXTS
-        
         if not variant:
             return False
-        if not (re.search(settings.PIPELINE_EMBED_PATH, path) and self.storage.exists(path)):
+        if not (re.search(settings.PIPELINE_EMBED_PATH, path.replace('\\', '/')) and self.storage.exists(path)):
             return False
         if not ext in EMBED_EXTS:
             return False
@@ -178,7 +175,7 @@ class Compressor(object):
         """Return the base64 encoded contents"""
         if path in self.__class__.asset_contents:
             return self.__class__.asset_contents[path]
-        data = self.read_file(path)
+        data = self.read_bytes(path)
         self.__class__.asset_contents[path] = base64.b64encode(data)
         return self.__class__.asset_contents[path]
 
@@ -192,24 +189,28 @@ class Compressor(object):
         Return the absolute public path for an asset,
         given the path of the stylesheet that contains it.
         """
-        if os.path.isabs(path):
-            path = os.path.join(default_storage.location, path)
+        if posixpath.isabs(path):
+            path = posixpath.join(default_storage.location, path)
         else:
-            path = os.path.join(start, path)
-        return os.path.normpath(path)
+            path = posixpath.join(start, path)
+        return posixpath.normpath(path)
 
     def relative_path(self, absolute_path, output_filename):
         """Rewrite paths relative to the output stylesheet path"""
-        absolute_path = os.path.join(settings.PIPELINE_ROOT, absolute_path)
-        output_path = os.path.join(settings.PIPELINE_ROOT, os.path.dirname(output_filename))
+        absolute_path = posixpath.join(settings.PIPELINE_ROOT, absolute_path)
+        output_path = posixpath.join(settings.PIPELINE_ROOT, posixpath.dirname(output_filename))
         return relpath(absolute_path, output_path)
 
-    def read_file(self, path):
+    def read_bytes(self, path):
         """Read file content in binary mode"""
-        file = default_storage.open(path, 'rb')
+        file = default_storage.open(path)
         content = file.read()
         file.close()
         return content
+
+    def read_text(self, path):
+        content = self.read_bytes(path)
+        return force_text(content)
 
 
 class CompressorBase(object):
@@ -231,8 +232,13 @@ class CompressorError(Exception):
 class SubProcessCompressor(CompressorBase):
     def execute_command(self, command, content):
         pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        pipe.stdin.write(smart_str(content))
+                                stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        try:
+            pipe.stdin.write(smart_bytes(content))
+        except IOError as e:
+            message = "Unable to pipe content to command: %s" % command
+            raise CompressorError(message, e)
         pipe.stdin.close()
 
         compressed_content = pipe.stdout.read()
@@ -247,5 +253,5 @@ class SubProcessCompressor(CompressorBase):
             raise CompressorError(error)
 
         if self.verbose:
-            print error
+            print(error)
         return compressed_content

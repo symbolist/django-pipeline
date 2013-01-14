@@ -1,6 +1,10 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 
 from pipeline.packager import Packager, PackageNotFound
+
+from tests.utils import _
 
 
 class PackagerTest(TestCase):
@@ -9,7 +13,7 @@ class PackagerTest(TestCase):
         packager.packages['js'] = packager.create_packages({
             'application': {
                 'source_filenames': (
-                    'js/application.js',
+                    _('pipeline/js/application.js'),
                 ),
                 'output_filename': 'application.js'
             }
@@ -29,9 +33,9 @@ class PackagerTest(TestCase):
         packages = packager.create_packages({
             'templates': {
                 'source_filenames': (
-                    'templates/photo/list.jst',
+                    _('pipeline/templates/photo/list.jst'),
                 ),
                 'output_filename': 'templates.js',
             }
         })
-        self.assertEqual(packages['templates'].templates, ['templates/photo/list.jst'])
+        self.assertEqual(packages['templates'].templates, [_('pipeline/templates/photo/list.jst')])
