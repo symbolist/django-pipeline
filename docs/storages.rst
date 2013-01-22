@@ -21,7 +21,6 @@ There is also non-packing storage available, that allows you to run ``collectsta
 without packaging your assets. Useful for production when you don't want to run compressor or compilers ::
 
   STATICFILES_STORAGE = 'pipeline.storage.NonPackagingPipelineStorage'
-<<<<<<< HEAD
 
 Also available if you want versioning ::
 
@@ -29,12 +28,6 @@ Also available if you want versioning ::
 
 Pipeline is also providing a storage that play nicely with staticfiles app
 particularly for development : ::
-=======
->>>>>>> 9af3f7e29d4805ee8de441315739bc48b33a0b8a
-
-Also available if you want versioning ::
-
-  STATICFILES_STORAGE = 'pipeline.storage.NonPackagingPipelineCachedStorage'
 
 
 Using with other storages
