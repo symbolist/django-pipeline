@@ -49,7 +49,7 @@ class Compiler(object):
 
                         compiler.compile_file(infile, outfile, outdated=outdated, force=force)
                     except CompilerError:
-                        if not self.storage.exists(output_path) or not settings.PIPELINE:
+                        if not self.storage.exists(output_path) or settings.DEBUG:
                             raise
         return paths
 

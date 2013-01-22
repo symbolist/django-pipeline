@@ -4,16 +4,6 @@
 Storages
 ========
 
-Using with a custom storage
-===========================
-
-Pipeline uses `Django Storage <https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#storages>`_
-to read, save and delete files, by default it use an improved ``StaticFilesStorage``.
-
-You can provide your own via ``PIPELINE_STORAGE`` : ::
-
-  PIPELINE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-
 
 Using with staticfiles
 ======================
@@ -31,6 +21,7 @@ There is also non-packing storage available, that allows you to run ``collectsta
 without packaging your assets. Useful for production when you don't want to run compressor or compilers ::
 
   STATICFILES_STORAGE = 'pipeline.storage.NonPackagingPipelineStorage'
+<<<<<<< HEAD
 
 Also available if you want versioning ::
 
@@ -38,8 +29,12 @@ Also available if you want versioning ::
 
 Pipeline is also providing a storage that play nicely with staticfiles app
 particularly for development : ::
+=======
+>>>>>>> 9af3f7e29d4805ee8de441315739bc48b33a0b8a
 
-  PIPELINE_STORAGE = 'pipeline.storage.PipelineFinderStorage'
+Also available if you want versioning ::
+
+  STATICFILES_STORAGE = 'pipeline.storage.NonPackagingPipelineCachedStorage'
 
 
 Using with other storages
