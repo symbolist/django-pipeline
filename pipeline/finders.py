@@ -1,7 +1,7 @@
 from itertools import chain
 
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.contrib.staticfiles.finders import BaseFinder, BaseStorageFinder, find, \
+from staticfiles.storage import staticfiles_storage
+from staticfiles.finders import BaseFinder, BaseStorageFinder, find, \
     AppDirectoriesFinder as DjangoAppDirectoriesFinder, FileSystemFinder as DjangoFileSystemFinder
 from django.utils._os import safe_join
 

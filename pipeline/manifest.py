@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 
 import os
 
-from django.contrib.staticfiles.finders import get_finders
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles.finders import get_finders
+from staticfiles.storage import staticfiles_storage
 
 from pipeline.conf import settings
 

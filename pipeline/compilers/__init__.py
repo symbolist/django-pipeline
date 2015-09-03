@@ -7,8 +7,8 @@ try:
 except ImportError:
     from pipes import quote
 
-from django.contrib.staticfiles import finders
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles import finders
+from staticfiles.storage import staticfiles_storage
 from django.core.files.base import ContentFile
 from django.utils.encoding import smart_bytes
 

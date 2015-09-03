@@ -4,8 +4,8 @@ import gzip
 
 from io import BytesIO
 
-from django.contrib.staticfiles.storage import CachedStaticFilesStorage, StaticFilesStorage
-from django.contrib.staticfiles.utils import matches_patterns
+from staticfiles.storage import CachedStaticFilesStorage, StaticFilesStorage
+from staticfiles.utils import matches_patterns
 
 from django.core.files.base import File
 

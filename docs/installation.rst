@@ -22,8 +22,8 @@ Installation
 4. Add the ``PipelineFinder`` to ``STATICFILES_FINDERS`` ::
 
         STATICFILES_FINDERS = (
-            'django.contrib.staticfiles.finders.FileSystemFinder',
-            'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+            'staticfiles.finders.FileSystemFinder',
+            'staticfiles.finders.AppDirectoriesFinder',
             'pipeline.finders.PipelineFinder',
         )
 
@@ -58,8 +58,8 @@ To upgrade from pipeline 1.3, you will need to follow these steps:
 2. Add the ``PipelineFinder`` to ``STATICFILES_FINDERS`` ::
 
         STATICFILES_FINDERS = (
-            'django.contrib.staticfiles.finders.FileSystemFinder',
-            'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+            'staticfiles.finders.FileSystemFinder',
+            'staticfiles.finders.AppDirectoriesFinder',
             'pipeline.finders.PipelineFinder',
         )
 

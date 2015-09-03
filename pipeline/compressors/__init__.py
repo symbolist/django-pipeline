@@ -7,7 +7,7 @@ import re
 
 from itertools import takewhile
 
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles.storage import staticfiles_storage
 from django.utils.encoding import smart_bytes, force_text
 
 from pipeline.conf import settings

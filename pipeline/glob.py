@@ -4,7 +4,7 @@ import os
 import re
 import fnmatch
 
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles.storage import staticfiles_storage
 
 __all__ = ["glob", "iglob"]
 

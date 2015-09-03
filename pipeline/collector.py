@@ -4,8 +4,8 @@ import os
 
 from collections import OrderedDict
 
-from django.contrib.staticfiles import finders
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles import finders
+from staticfiles.storage import staticfiles_storage
 
 from pipeline.finders import PipelineFinder
 

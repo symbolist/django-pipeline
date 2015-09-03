@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.contrib.staticfiles.finders import find
+from staticfiles.storage import staticfiles_storage
+from staticfiles.finders import find
 from django.core.files.base import ContentFile
 from django.utils.encoding import smart_bytes
 
@@ -11,7 +11,6 @@ from pipeline.conf import settings
 from pipeline.exceptions import PackageNotFound
 from pipeline.glob import glob
 from pipeline.signals import css_compressed, js_compressed
-
 
 class Package(object):
     def __init__(self, config):

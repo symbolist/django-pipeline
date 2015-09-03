@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles.storage import staticfiles_storage
 
 from django import template
 from django.template.base import VariableDoesNotExist

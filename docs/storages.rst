@@ -31,8 +31,8 @@ with `Selenium <http://docs.seleniumhq.org/>`_) you should install the finder
 that allows staticfiles to locate your outputted assets : ::
 
   STATICFILES_FINDERS = (
-      'django.contrib.staticfiles.finders.FileSystemFinder',
-      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+      'staticfiles.finders.FileSystemFinder',
+      'staticfiles.finders.AppDirectoriesFinder',
       'pipeline.finders.PipelineFinder',
   )
 
@@ -62,7 +62,7 @@ so that you can avoid compressing them on the fly. ::
 
 The storage need to inherit from ``GZIPMixin``: ::
 
-  from django.contrib.staticfiles.storage import CachedStaticFilesStorage
+  from staticfiles.storage import CachedStaticFilesStorage
 
   from pipeline.storage import GZIPMixin
 
@@ -83,7 +83,7 @@ Your storage only needs to inherit from ``PipelineMixin`` and ``ManifestFilesMix
 In Django 1.7+ you should use `ManifestFilesMixin <https://docs.djangoproject.com/en/1.7/ref/contrib/staticfiles/#manifeststaticfilesstorage>`_
 unless you don't have access to the local filesystem in which case you should use ``CachedFilesMixin``. ::
 
-  from django.contrib.staticfiles.storage import CachedFilesMixin, ManifestFilesMixin
+  from staticfiles.storage import CachedFilesMixin, ManifestFilesMixin
 
   from pipeline.storage import PipelineMixin
 

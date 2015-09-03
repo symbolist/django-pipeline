@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from jinja2 import nodes, TemplateSyntaxError
 from jinja2.ext import Extension
 
-from django.contrib.staticfiles.storage import staticfiles_storage
+from staticfiles.storage import staticfiles_storage
 
 from ..packager import PackageNotFound
 from ..utils import guess_type
